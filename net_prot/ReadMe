@@ -1,0 +1,66 @@
+To compile user and kernel code use make 
+To load it with bpftool
+    sudo bpftool prog load hello.bpf.o /sys/fs/bpf/hello
+To handle - link and load xdp prog
+    use xdp-tools lib
+
+To get kprobe info 
+    cat /proc/kallsyms | grep dev_queue_xmit
+    sudo cat /sys/kernel/debug/tracing/available_events | grep net
+    sudo bpftool btf dump file /sys/kernel/btf/vmlinux | grep __netif_receive_skb_core
+
+Code for ingress traffic from xdp
+    sudo ./my_program 3
+    3 comes from 
+        ip link show
+
+Hook for kprobe ingress
+    __netif_receive_skb
+
+Hook for kprobe egress
+    __dev_queue_xmit
+
+get vmlinux.h
+    bpftool btf dump file /sys/kernel/btf/vmlinux format c > vmlinux.h
+
+sudo cat /sys/kernel/debug/tracing/trace_pipe
+
+Libs
+    sudo apt install -y clang
+    sudo apt install -y llvm
+    sudo apt install -y gdb
+    sudo apt install -y linux-headers-$(uname -r)
+    sudo apt install -y m4
+    sudo apt install -y gcc-multilib
+    sudo apt install -y libbpf-dev
+    sudo apt install -y g++
+    sudo apt install -y libbpf-dev
+    sudo apt install -y make 
+    sudo apt-get install -y build-essential libncurses-dev bison flex libssl-dev libelf-dev
+
+config LSM
+    sudo cat /etc/default/grub
+    cat /sys/kernel/security/lsm
+    sudo cat /boot/config-$(uname -r) | grep CONFIG_BPF_LSM
+    sudo update-grub2
+    sudo reboot
+
+
+Isolation paths
+    ssh
+        isolation add process path /usr/sbin/sshd
+    dns
+        isolation add process path /usr/sbin/avahi-daemon
+        isolation add process path /usr/lib/systemd/systemd-resolved
+    network manager
+        isolation add process path /usr/sbin/NetworkManager
+    vscode
+        isolation add process path /home/ayush/.vscode-server/code-384ff7382de624fb94dbaf6da11977bba1ecd427
+        isolation add process path /home/ayush/.vscode-server/cli/servers/Stable-384ff7382de624fb94dbaf6da11977bba1ecd427/server/node
+    
+    
+where my pkt go
+    sudo ./pwru/pwru 'tcp and host 169.254.2.2'
+
+ssl file hunt
+    
